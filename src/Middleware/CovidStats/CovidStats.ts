@@ -15,7 +15,7 @@ export default class CovidStats {
                 };
 
                 // construct line data
-                resp.json().then(data => {
+                await resp.json().then(data => {
                     data.forEach((day: any) => {
                         result.data.push({x: day.date_reported.split('T')[0], y: day.count});
                     })
@@ -38,7 +38,7 @@ export default class CovidStats {
         };
 
         // construct line data
-        resp.json().then(data => {
+        await resp.json().then(data => {
             data.forEach((day: any) => {
                 result.data.push({x: day.date_reported.split('T')[0], y: day.count});
             })
@@ -56,7 +56,8 @@ export default class CovidStats {
             case "Alberta":
             case "Central Zone":
                 let query = `https://data.edmonton.ca/resource/5n6j-rw53.json?$select=Date, "${zone}"`;
-                return await fetch(query);
+                let resp =  await fetch(query);
+                return resp.json();
             default:
                 throw new Error("Invalid Zone")
         }
@@ -72,7 +73,8 @@ export default class CovidStats {
             case "Central Zone":
             case "Unknown":
                 let query = `https://data.edmonton.ca/resource/f7kx-redx.json?$where=zone="${zone}"&$order=date DESC&$limit=1`;
-                return await fetch(query);
+                let resp =  await fetch(query);
+                return resp.json();
             default:
                 throw new Error("Invalid Zone")
         }
@@ -101,7 +103,8 @@ export default class CovidStats {
             case "Rest of Alberta":
             case "Alberta provincewide":
                 let query = `https://data.edmonton.ca/resource/4vfx-e2qj.json?$where=location="${zone}"&$order=date_from DESC&$limit=1`;
-                return await fetch(query);
+                let resp =  await fetch(query);
+                return await resp.json();
             default:
                 throw new Error("Invalid Zone")
         }
@@ -114,7 +117,26 @@ export default class CovidStats {
             case "Rest of Alberta":
             case "Alberta provincewide":
                 let query = `https://data.edmonton.ca/resource/4vfx-e2qj.json?$where=location="${zone}"&$order=date_from ASC`;
-                return await fetch(query);
+                let resp =  await fetch(query);
+
+                const result = {
+                    id: zone + "",
+                    color: "hsl(195, 70%, 50%)",
+                    data: [] as object[]
+                };
+
+                if (zone === "Alberta provincewide") {
+                    result.id = "Alberta Province Wide";
+                }
+
+                // construct line data
+                await resp.json().then(data => {
+                    data.forEach((point: any) => {
+                        result.data.push({x: point.date_from.split('T')[0], y: point.r_value});
+                    })
+                });
+
+                return result;
             default:
                 throw new Error("Invalid Zone")
         }

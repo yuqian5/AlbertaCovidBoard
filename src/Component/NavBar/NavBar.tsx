@@ -1,6 +1,5 @@
 import React from "react";
 
-import './NavBar.css'
 import 'bootstrap/dist/css/bootstrap.css';
 
 import {NavDropdown, Nav, Navbar} from "react-bootstrap";
@@ -10,7 +9,7 @@ import { Link } from "react-router-dom";
 export default class NavBar extends React.Component {
     render() {
         return (
-            <div>
+            <div style={{marginBottom: "20px"}}>
                 <Navbar bg="light" expand="lg">
                     <Navbar.Brand as={Link} to="/">Alberta Covid Board</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -29,12 +28,14 @@ export default class NavBar extends React.Component {
 
                             <Nav.Link as={Link} to="/Variants">Variants</Nav.Link>
 
-                            <Nav.Link as={Link} to="/Hospitalizations">Hospitalizations</Nav.Link>
-
                             <Nav.Link as={Link} to="/VaccinationProgress">Vaccination Progress</Nav.Link>
 
                             <Nav.Link as={Link} to="/RelaunchStatus">Relaunch Status</Nav.Link>
+
+                            <Nav.Link as={Link} to="/Misc">Misc</Nav.Link>
                         </Nav>
+
+                        <Nav.Link as={Link} to="/NeedHelp" className="pull-right">Need Help?</Nav.Link>
                     </Navbar.Collapse>
                 </Navbar>
             </div>
